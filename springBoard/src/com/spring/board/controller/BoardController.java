@@ -1,28 +1,23 @@
 package com.spring.board.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.board.HomeController;
 import com.spring.board.service.BoardService;
@@ -30,8 +25,6 @@ import com.spring.board.vo.BoardVo;
 import com.spring.board.vo.ComCodeVo;
 import com.spring.board.vo.PageVo;
 import com.spring.common.CommonUtil;
-
-import net.sf.json.JSONArray;
 
 @Controller
 public class BoardController {
@@ -68,32 +61,7 @@ public class BoardController {
 		return "board/boardList";
 	}
 
-	/* 게시물 조회 json
-	@RequestMapping(value = "/board/boardSearchAction.do", method = RequestMethod.POST)
-	@ResponseBody
-	public JSONArray boardSearchAction(HttpServletRequest request, Locale locale, Model model, BoardVo boardVo,
-			PageVo pageVo) throws Exception {
-		List<ComCodeVo> comCodeList = new ArrayList<ComCodeVo>();
-		comCodeList = boardService.codeNameList();
-
-		List<BoardVo> boardList = new ArrayList<BoardVo>();
-
-		int page = 1;
-		int totalCnt = 0;
-
-		if (pageVo.getPageNo() == 0) {
-			pageVo.setPageNo(page);
-		}
-
-		model.addAttribute("codeNameList", comCodeList);
-
-		JSONArray jsonArray = new JSONArray();
-
-		return jsonArray.fromObject(boardService.SelectBoardList(pageVo));
-	}
-	*/
-
-	/* html 조회 */
+	/* 게시물 조회 / 페이지네이션 */
 	@RequestMapping(value = "/board/boardSearchAction.do", method = RequestMethod.POST)
 	public String boardSearchAction(HttpServletRequest request, Locale locale, Model model, PageVo pageVo) throws Exception {
 
@@ -141,59 +109,34 @@ public class BoardController {
 	@RequestMapping(value = "/board/boardWrite.do", method = RequestMethod.GET)
 	public String boardWrite(Locale locale, Model model) throws Exception {
 
+		List<ComCodeVo> comCodeList = new ArrayList<ComCodeVo>();
+		comCodeList = boardService.codeNameList();
+
+		model.addAttribute("codeNameList", comCodeList);
 		return "board/boardWrite";
 	}
 
 	/* 게시물 작성 */
 	@RequestMapping(value = "/board/boardWriteAction.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String boardWriteAction(Locale locale, BoardVo boardVo) throws Exception {
-
-		HashMap<String, String> result = new HashMap<String, String>();
-		CommonUtil commonUtil = new CommonUtil();
-
-		int resultCnt = boardService.boardInsert(boardVo);
-
-		result.put("success", (resultCnt > 0) ? "Y" : "N");
-		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
-
-		System.out.println("callbackMsg::" + callbackMsg);
-
-		return callbackMsg;
-	}
-	
-	/* 다중 게시물 작성 */
-	@RequestMapping(value = "/board/boardWriteAction2.do", method = RequestMethod.POST)
-	@ResponseBody
-	public String boardWriteAction2(HttpServletRequest request, Locale locale, BoardVo boardVo) throws Exception {
+	public String boardWriteAction(Locale locale, @RequestBody BoardVo boardVo) throws Exception {
 
 		HashMap<String, String> result = new HashMap<String, String>();
 		CommonUtil commonUtil = new CommonUtil();
 		
-		int count = Integer.parseInt(request.getParameter("count"));
-		System.out.println(count);
+		int count = boardVo.getCount();
 		System.out.println(count);
 		System.out.println(count);
 
-		System.out.println(boardVo);
-		System.out.println(boardVo);
-
-		System.out.println(boardVo.getBoardType().split(",")[0]);
-		System.out.println(boardVo.getBoardType().split(",")[1]);
+		List<BoardVo> boardList = boardVo.getBoardVoList();
+		System.out.println(boardList);
+		System.out.println(boardList);
 		
 		int resultCnt = 0;
 		
-		for(int i = 0; i < count; i++) {
-			BoardVo temp = new BoardVo();
-			temp.setBoardType(boardVo.getBoardType().split(",")[i]);
-			temp.setBoardTitle(boardVo.getBoardTitle().split(",")[i]);
-			temp.setBoardComment(boardVo.getBoardComment().split(",")[i]);
-			temp.setCreator(boardVo.getCreator().split(",")[i]);
-			
-			if(boardService.boardInsert(temp)>0)
-				resultCnt++;
-		}
-		result.put("success", (resultCnt > count-1) ? "Y" : "N");
+		resultCnt = boardService.boardListInsert(boardList, count);
+		
+		result.put("success", (resultCnt > 0) ? "Y" : "N");
 		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);
 
 		System.out.println("callbackMsg::" + callbackMsg);

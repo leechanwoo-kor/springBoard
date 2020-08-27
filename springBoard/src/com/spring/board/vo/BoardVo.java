@@ -1,5 +1,8 @@
 package com.spring.board.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardVo {
 
 	private String codeId;
@@ -11,6 +14,24 @@ public class BoardVo {
 	private String creator;
 	private String modifier;
 	private int totalCnt;
+	private List<BoardVo> boardVoList;
+	private int count;
+
+	public List<BoardVo> getBoardVoList() {
+		return boardVoList;
+	}
+
+	public void setBoardVoList(List<BoardVo> boardVoList) {
+		this.boardVoList = boardVoList;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 
 	public String getCodeId() {
 		return codeId;

@@ -1,5 +1,6 @@
 package com.spring.board.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,25 @@ public class BoardServiceImpl implements BoardService {
 	public int boardInsert(BoardVo boardVo) throws Exception {
 		// TODO Auto-generated method stub
 		return boardDao.boardInsert(boardVo);
+	}
+	
+	/* 다중 게시물 작성 */
+	@Override
+	public int boardListInsert(List<BoardVo> boardList, int count) throws Exception {
+		// TODO Auto-generated method stub
+		int cnt = 0;
+		
+		BoardVo boardVo;
+		
+		for(int i = 0; i < count; i++) {
+			
+			boardVo = boardList.get(i);
+			
+			if(boardDao.boardInsert(boardVo)>0)
+				cnt++;
+		}
+		
+		return cnt;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.spring.board.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.spring.board.vo.BoardVo;
@@ -17,6 +18,8 @@ public interface BoardService {
 	public int selectBoardCnt() throws Exception;
 
 	public int boardInsert(BoardVo boardVo) throws Exception;
+	
+	public int boardListInsert(List<BoardVo> boardList, int count) throws Exception;
 
 	public int boardUpdate(BoardVo boardVo) throws Exception;
 

@@ -51,7 +51,7 @@
 		var $frm = $j('.selectType :input');
 		var param = "pageNo=" + n + "&" + $frm.serialize();
 		
-		alert(param);
+		/* alert(param); */
 		
 		$j.ajax({
 			url : "/board/boardSearchAction.do",
@@ -59,7 +59,7 @@
 			data : param,
 			dataType : "html",
 			success : function(data, textStatus, jqXHR) {
-				alert("조회완료");
+				/* alert("조회완료"); */
 
 				$j("#divTable").html(data);
 			},
@@ -154,8 +154,8 @@
 			<!-- checkBox -->
 			<tr>
 				<td align="left"><input type="checkbox" class="typeCk"
-					id="checkAll" value="all">전체 <c:forEach var="codeVo"
-						items="${codeNameList}" varStatus="status">
+					id="checkAll" value="all">전체 
+					<c:forEach var="codeVo" items="${codeNameList}" varStatus="status">
 						<input type="checkbox" class="typeCk" name="codeId"
 							value="${codeVo.codeId}">${codeVo.codeName}</>					
 					</c:forEach> <input type="button" id="btnSearch" value="조회"></td>
