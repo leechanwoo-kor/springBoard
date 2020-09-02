@@ -115,18 +115,14 @@ public class BoardController {
 		model.addAttribute("codeNameList", comCodeList);
 		return "board/boardWrite";
 	}
-
+	
 	/* 게시물 작성 */
 	@RequestMapping(value = "/board/boardWriteAction.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String boardWriteAction(Locale locale, @RequestBody BoardVo boardVo) throws Exception {
+	public String boardWriteAction(HttpServletRequest request, Locale locale, BoardVo boardVo) throws Exception {
 
 		HashMap<String, String> result = new HashMap<String, String>();
 		CommonUtil commonUtil = new CommonUtil();
-		
-		int count = boardVo.getCount();
-		System.out.println(count);
-		System.out.println(count);
 
 		List<BoardVo> boardList = boardVo.getBoardVoList();
 		System.out.println(boardList);
@@ -134,7 +130,7 @@ public class BoardController {
 		
 		int resultCnt = 0;
 		
-		resultCnt = boardService.boardListInsert(boardList, count);
+		resultCnt = boardService.boardListInsert(boardList);
 		
 		result.put("success", (resultCnt > 0) ? "Y" : "N");
 		String callbackMsg = commonUtil.getJsonCallBackString(" ", result);

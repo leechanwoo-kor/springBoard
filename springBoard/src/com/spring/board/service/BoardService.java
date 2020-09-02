@@ -19,7 +19,7 @@ public interface BoardService {
 
 	public int boardInsert(BoardVo boardVo) throws Exception;
 	
-	public int boardListInsert(List<BoardVo> boardList, int count) throws Exception;
+	public int boardListInsert(List<BoardVo> boardList) throws Exception;
 
 	public int boardUpdate(BoardVo boardVo) throws Exception;
 

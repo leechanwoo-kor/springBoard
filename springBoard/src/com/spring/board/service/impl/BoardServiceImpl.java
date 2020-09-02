@@ -52,13 +52,15 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int boardInsert(BoardVo boardVo) throws Exception {
 		// TODO Auto-generated method stub
+		
 		return boardDao.boardInsert(boardVo);
 	}
 	
 	/* 다중 게시물 작성 */
 	@Override
-	public int boardListInsert(List<BoardVo> boardList, int count) throws Exception {
+	public int boardListInsert(List<BoardVo> boardList) throws Exception {
 		// TODO Auto-generated method stub
+		int count = boardList.size();
 		int cnt = 0;
 		
 		BoardVo boardVo;

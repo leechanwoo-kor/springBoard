@@ -1,0 +1,12 @@
+ul,li {list-style:none;}
+#keyboard {padding:10px;}
+#keyboard ul {overflow:hidden;margin:0;padding:0;} 
+#keyboard li {float:left; text-align:center; border:1px solid #c8c8c8; margin:0;padding:0;}
+#keyboard {background:#eee;}
+#keyboard li {background:#fff;}
+
+#keyboard li {width:50px; height:50px; cursor:pointer;}
+#keyboard li:hover{
+   background:#555;color:#fff;
+
+}
