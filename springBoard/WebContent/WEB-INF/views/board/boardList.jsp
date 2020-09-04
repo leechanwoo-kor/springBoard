@@ -38,15 +38,14 @@
 		$j("#btnSearch").click(function(){
 			ajax(1);
 		});
-		
-		 
+
 		
 	});
 	
 	function test(){
 		 alert("test");
-	 }
-	 
+	}
+	
 	function ajax(n){
 		var $frm = $j('.selectType :input');
 		var param = "pageNo=" + n + "&" + $frm.serialize();
@@ -69,6 +68,24 @@
 		});
 	}
 	
+	$(function() {
+	    $( "#testDatepicker" ).datepicker({
+	        changeYear: true, // 콤보박스에서 년 선택 가능
+	    	changeMonth: true, // 콤보박스에서 월 선택 가능
+	        nextText: '다음 달',
+	        prevText: '이전 달',
+	        dateFormat: "yy-mm-dd",
+	        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], // 요일 text
+	        dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'], // 요일 tooltip
+	        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'], // 월 text
+	        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] // 월 tooltip
+	    });
+	});
+	
+	function cal(){
+		var date = $j(".date").val();
+		location.href = "/board/boardCalendar.do?date=" + date;
+	}
 </script>
 
 <!-- 게시물 리스트 페이지 -->
@@ -139,30 +156,35 @@
 
 		</div>
 		<table align="center">
+			<tr>
+				<td align="right"><a href="/board/boardExcel.do?pageNo=${pageNo}">Excel</a>
+				
 			<c:if test="${sessionScope.user == null }">
-				<tr>
-					<td align="right"><a href="/board/boardWrite.do">글쓰기</a></td>
-				</tr>
+				<td align="right"><a href="/board/boardWrite.do">글쓰기</a></td>
 			</c:if>
 			<c:if test="${sessionScope.user != null }">
-				<tr>
-					<td align="right"><a href="/board/boardWrite.do">글쓰기 </a> <a
-						href="/user/logout.do">로그아웃</a></td>
-				</tr>
+				<td align="right"><a href="/board/boardWrite.do">글쓰기 </a> 
+				<a href="/user/logout.do">로그아웃</a></td>
 			</c:if>
-
+			</tr>
 			<!-- checkBox -->
 			<tr>
-				<td align="left"><input type="checkbox" class="typeCk"
+				<td align="center"><input type="checkbox" class="typeCk"
 					id="checkAll" value="all">전체 
 					<c:forEach var="codeVo" items="${codeNameList}" varStatus="status">
 						<input type="checkbox" class="typeCk" name="codeId"
 							value="${codeVo.codeId}">${codeVo.codeName}</>					
 					</c:forEach> <input type="button" id="btnSearch" value="조회"></td>
 			</tr>
-
+			<tr>
+				<td align="center">
+				<input type="text" class="date" id="testDatepicker"> 
+				<a type="button" id="btnCalendar" onclick="cal();">export</a></td>
+			</tr>
 		</table>
 
 	</form>
 </body>
+
+
 </html>
