@@ -2,6 +2,7 @@ package com.spring.board.service.impl;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,11 @@ import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -186,23 +190,130 @@ public class BoardServiceImpl implements BoardService {
 	public XSSFWorkbook boardCalendar(XSSFWorkbook workbook, String date) throws Exception {
 		// TODO Auto-generated method stub
 		
-		// 워크북 생성
+		// 워크북, 시트 생성
 		XSSFWorkbook wb = workbook;
-		XSSFSheet sheet = wb.createSheet("calendar");
+		XSSFSheet sheet = wb.cloneSheet(0);
+		wb.setSheetName(1, "calendar");
+		
 		Row row = null;
 	    Cell cell = null;
-	    int rowNo = 0;
 	    
+	    // 날짜 불러오기
 	    row = sheet.createRow(0);
 	    cell = row.createCell(0);
 	    cell.setCellValue(date);
 		
-		
-		
+	    // 스타일
+	    Map<String, XSSFCellStyle> cellStyle = new HashMap<String, XSSFCellStyle>();
+	    int num = 1;
+	    for(int i = 1; i<4; i++) {
+	    	for(int j = 1; j<4; j++) {
+	    		String name ="cellStyle"+num;
+	    		
+	    		XSSFCellStyle cs = wb.createCellStyle();
+	    		cs.cloneStyleFrom(sheet.getRow(i).getCell(j).getCellStyle());
+	    		
+	    		cellStyle.put(name, cs);
+	    		
+	    		num++;
+	    	}
+	    }
+	    
+	    int h=1; // header 생성
+	    for(int i = 1; i <= 18; i+=3) {
+	    	row = sheet.createRow(i);
+	    	for(int j = 1; j <= 21; j++) {
+	    		cell = row.createCell(j);
+	    		cell = sheet.getRow(i).getCell(j);
+	    	    cell.setCellStyle(cellStyle.get("cellStyle"+h));
+	    	    if(h==2) {
+	    	    	cell.setCellValue(date);
+	    	    }
+	    	    h++;
+	    	    if(h>3) {
+	    	    	h=1;
+	    	    }
+	    	}
+	    	h=1;
+	    }
+	    int b=4; // body 생성
+	    for(int i = 2; i <= 19; i+=3) {
+	    	row = sheet.createRow(i);
+	    	for(int j = 1; j <= 21; j++) {
+	    		cell = row.createCell(j);
+	    		cell = sheet.getRow(i).getCell(j);
+	    	    cell.setCellStyle(cellStyle.get("cellStyle"+b));
+	    	    b++;
+	    	    if(b>6) {
+	    	    	b=4;
+	    	    }
+	    	}
+	    	b=4;
+	    }
+	    
+	    int f=7; // footer 생성
+	    for(int i = 3; i <= 20; i+=3) {
+	    	row = sheet.createRow(i);
+	    	for(int j = 1; j <= 21; j++) {
+	    		cell = row.createCell(j);
+	    		cell = sheet.getRow(i).getCell(j);
+	    	    cell.setCellStyle(cellStyle.get("cellStyle"+f));
+	    	    f++;
+	    	    if(f>9) {
+	    	    	f=7;
+	    	    }
+	    	}
+	    	f=7;
+	    }
+	    
+	    
+	    Calendar cal = Calendar.getInstance();
+	    // 달력 데이터 배열
+	    String[][] calDate = new String[6][7];
+	    int width=7;
+	    int startDay;
+	    int lastDay;
+	    int inputDate=1;
+
+	    String year = date.substring(0,4);
+	    String month = date.substring(5,7);
+	    
+	    cal.set(Calendar.YEAR, Integer.parseInt(year));
+	    cal.set(Calendar.MONTH, Integer.parseInt(month)-1);
+	    cal.set(Calendar.DATE, 1);
+	    
+	    startDay = cal.get(Calendar.DAY_OF_WEEK);
+	    lastDay = cal.getActualMaximum(Calendar.DATE);
+	    
+	    int r = 0;
+	    for(int i = 1; inputDate <= lastDay; i++) {
+	    	if(i<startDay) {
+	    		calDate[r][i-1]="";
+	    	}else {
+	    		calDate[r][(i-1)%width]=Integer.toString(inputDate);
+	    		inputDate++;
+	    		
+	    		if(i%width==0) {
+	    			r++;
+	    		}
+	    	}
+	    }
+
+	    int cr=0; int cc=1; // cal 입력
+	    for(int i = 1; i <= 18; i+=3) {
+	    	for(int j = 2; j <= 22; j+=3) {
+	    		cell = sheet.getRow(i).getCell(j);
+	    		cell.setCellValue(calDate[cr][(cc-1)%width]);
+	    		cc++;
+	    	}
+	    	cr++;
+	    }
+	    
+		// 폼 시트 삭제
 		wb.removeSheetAt(0);
+		
 		return wb;
 	}
-	
-	
+
 
 }

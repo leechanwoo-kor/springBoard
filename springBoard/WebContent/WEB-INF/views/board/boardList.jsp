@@ -178,7 +178,13 @@
 			</tr>
 			<tr>
 				<td align="center">
-				<input type="text" class="date" id="testDatepicker"> 
+				<%@ page import="java.util.Date" %>
+				<%@ page import="java.text.SimpleDateFormat" %>
+				<%	Date nowTime = new Date();
+					SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+				%>
+
+				<input type="text" class="date" id="testDatepicker" value="<%= sf.format(nowTime) %>"> 
 				<a type="button" id="btnCalendar" onclick="cal();">export</a></td>
 			</tr>
 		</table>

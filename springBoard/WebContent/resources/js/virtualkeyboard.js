@@ -79,45 +79,48 @@ var ga = 44032;
    keyboard.empty();
 });  */
 
-// 키보드 생성====================================================================================================================================
-$j(document).on("click",".inputKeyboard",function(){
-   $j(this).focus();
-   var keyboard=$j("#keyboard");
-   
-   var thisId = $j(this).attr('id');
-   var parentId= $j(this).parent().parent().parent().parent().attr('id');
-   keyboard.attr('name',parentId+','+thisId)
-   keyboard.empty();
-   show_keyboard(eng);
+/* 키보드 생성 */
+$j(document).on("click","#inputKeyboard",function(){
+	alert("포커스");
+	$j(this).focus();
+	var keyboard=$j("#keyboard");
+
+	var thisId = $j(this).attr('id');
+	var parentId= $j(this).parent().parent().parent().parent().attr('id');
+	keyboard.attr('name',parentId+','+thisId)
+	keyboard.empty();
+	show_keyboard(eng);
 });
 
-function change_keyboard(language,lanArr){
-   var keyboard=$j("#keyboard");
-   keyboard.empty();
-   show_keyboard(lanArr);
-   $j("#langu").attr("value",language);
-}
-
 function show_keyboard(obj){
-   for(var i=0;i<obj.length;i++){
-      var ul = document.createElement('ul');
-      for(var j=0;j<obj[i].length;j++){
-         var li = document.createElement('li');
-         var key= document.createTextNode( obj[i][j] );
-         li.appendChild( key );
+	for(var i=0;i<obj.length;i++){
+		var ul = document.createElement('ul');
+		for(var j=0;j<obj[i].length;j++){
+			var li = document.createElement('li');
+			var key= document.createTextNode( obj[i][j] );
+			li.appendChild( key );
 
-         if( obj[i][j]=='enter'){
-            li.style="width:208px";
-         }else if(obj[i][j]=='한/영'){
-            li.style="width:156px";
-         }else if(obj[i][j]=='space'){
-            li.style="width:735px";
-         }
-         ul.appendChild(li);
-      }
-      document.getElementById('keyboard').appendChild(ul);   
-   }
+			if( obj[i][j]=='enter'){
+				li.style="width:208px";
+			}else if(obj[i][j]=='한/영'){
+				li.style="width:156px";
+			}else if(obj[i][j]=='space'){
+				li.style="width:735px";
+			}
+			ul.appendChild(li);
+		}
+		document.getElementById('keyboard').appendChild(ul);   
+	}
 }
+
+function change_keyboard(language,lanArr){
+	var keyboard=$j("#keyboard");
+	keyboard.empty();
+	show_keyboard(lanArr);
+	$j("#langu").attr("value",language);
+}
+
+
 var shiftCnt=0;
 //가상키보드 클릭시 문자 입력====================================================================================================================================
 $j(document).on("click","li",function(){

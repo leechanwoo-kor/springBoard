@@ -239,7 +239,7 @@ public class BoardController {
 	public void boardCalendar(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String date = request.getParameter("date");
 		
-		FileInputStream fis = new FileInputStream("C:\\calendar.xlsx");
+		FileInputStream fis = new FileInputStream("C:\\calendar1.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 
 		XSSFWorkbook wb = boardService.boardCalendar(workbook, date);
